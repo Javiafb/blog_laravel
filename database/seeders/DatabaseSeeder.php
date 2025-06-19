@@ -2,9 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Symfony\Component\String\ByteString;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,6 +20,9 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password'=> bcrypt(12345678),
         ]);
+
+        Category::factory(5)->create();
     }
 }
