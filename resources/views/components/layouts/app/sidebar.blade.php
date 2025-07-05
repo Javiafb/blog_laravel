@@ -16,6 +16,15 @@ $grupos = [
 
 ],
 
+[
+'name' => 'Posts',
+'iconos' => 'newspaper',
+'url'=> route('admin.post.index'),
+'current' => request()->routeIs('admin.post.*')
+
+
+],
+
 ];
 
 
@@ -40,11 +49,9 @@ $grupos = [
         <flux:navlist variant="outline">
             @foreach ($grupos as $grup => $link)
 
-            <flux:navlist.group :heading="$grup" class="grid">
+            <flux:navlist.group :heading="$link['name']" class="grid">
                 <flux:navlist.item :icon="$link['iconos']" :href="$link['url']" :current="$link['current']" wire:navigate>{{$link['name']}}</flux:navlist.item>
             </flux:navlist.group>
-
-
 
             @endforeach
 
@@ -157,18 +164,6 @@ $grupos = [
     {{ $slot }}
 
     @fluxScripts
-
-    @if(session('swal'))
-
-    <script>
-        Swal.fire(@json(session('swal')));
-        //  Swal.fire({
-        //     title: "Buen hecho!",
-        //     text: "Categoria cargada correctamente!",
-        //     icon: "success"
-        // });
-    </script>
-    @endif
 
 </body>
 

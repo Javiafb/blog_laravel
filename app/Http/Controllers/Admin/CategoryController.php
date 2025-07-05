@@ -36,10 +36,10 @@ class CategoryController extends Controller
             'name' => $request->input('name'),
         ]);
 
-        session()->flash('swal',[
-            'title'=> 'Bien hecho!',
-            'text'=> 'Categoria cargada correctamente!',
-            'icon'=> 'success'
+        session()->flash('swal', [
+            'title' => 'Bien hecho!',
+            'text' => 'Categoria cargada correctamente!',
+            'icon' => 'success'
         ]);
 
         return redirect()->route('admin.categories.index');
@@ -58,7 +58,7 @@ class CategoryController extends Controller
      */
     public function edit(category $category)
     {
-        //
+        return view('admin.categories.edit', compact('category'));
     }
 
     /**
@@ -66,7 +66,19 @@ class CategoryController extends Controller
      */
     public function update(Request $request, category $category)
     {
-        //
+
+        $category->update([
+            'name' => $request->input('name'),
+        ]);
+
+
+        session()->flash('swal', [
+            'title' => 'Bien hecho!',
+            'text' => 'Categoria actualizada!',
+            'icon' => 'success'
+        ]);
+
+        return redirect()->route('admin.categories.index');
     }
 
     /**
@@ -74,6 +86,14 @@ class CategoryController extends Controller
      */
     public function destroy(category $category)
     {
-        //
+         $category->delete();
+
+        session()->flash('swal', [
+            'title' =>'Bien hecho!',
+            'text' => 'Categoria eliminada!',
+            'icon' => 'success'
+        ]);
+
+        return redirect()->route('admin.categories.index');
     }
 }
