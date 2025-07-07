@@ -3,10 +3,9 @@
     <div class="mb-8 flex justify-between items-center">
         <flux:breadcrumbs>
             <flux:breadcrumbs.item href="{{ route('dashboard') }}" icon="home" />
-            <flux:breadcrumbs.item href="#">Post</flux:breadcrumbs.item>
-            <flux:breadcrumbs.item>Post</flux:breadcrumbs.item>
+            <flux:breadcrumbs.item href="#">Tags</flux:breadcrumbs.item>
         </flux:breadcrumbs>
-        <a href="{{ route('admin.post.create') }}"><button type="button" class="boton">Nuevo post</button></a>
+        <a href="{{ route('admin.tag.create') }}"><button type="button" class="boton">Nueva Tag</button></a>
     </div>
 
     <table id="miTabla" class="min-w-full divide-y divide-gray-200 rounded-md shadow-md">
@@ -19,15 +18,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($post as $data)
+            @foreach ($tag as $data)
             <tr>
                 <td>{{ $data->id }}</td>
-                <td>{{ $data->title }}</td>
+                <td>{{ $data->name }}</td>
                 <td>
-                    <a href="{{ route('admin.post.edit',$data) }}"> <button class="boton">editar</button></a>
+                    <a href="{{ route('admin.tag.edit',$data) }}"> <button class="boton">editar</button></a>
                 </td>
                 <td>
-                    <form class="delete" action="{{ route('admin.post.destroy',$data) }}" method="post">
+                    <form class="delete" action="{{ route('admin.tag.destroy',$data) }}" method="post">
                         @csrf
                         @method('DELETE')
                         <button class="boton-red">borrar</button>
@@ -53,6 +52,7 @@
                 searching: true,
             });
         });
+
         forms = document.querySelectorAll('.delete');
 
         forms.forEach(form => {
@@ -60,7 +60,7 @@
                 e.preventDefault();
                 Swal.fire({
                     title: "¿Estas seguro?",
-                    text: "Deseas eliminar este post!",
+                    text: "Deseas eliminar esta tag!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#3085d6",

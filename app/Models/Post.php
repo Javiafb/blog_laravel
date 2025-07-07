@@ -18,6 +18,7 @@ class Post extends Model
         'image_path',
         'user_id',
         'category_id',
+        'tag_id',
         'is_published',
         'published_at',
     ];

@@ -24,6 +24,9 @@ return new class extends Migration
             $table->foreignId('category_id')
                 ->constrained()
                 ->onDelete('cascade');
+            $table->foreignId('tag_id')
+                ->constrained('tag')
+                ->onDelete('cascade');
 
             $table->boolean('is_published')
                 ->default(false);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\tag;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -67,7 +68,8 @@ class PostController extends Controller
     public function edit(Post $post)
     {
         $categories = Category::all();
-        return view('admin.post.edit', compact('post', 'categories'));
+        $tag = tag::all();
+        return view('admin.post.edit', compact('post', 'categories' , 'tag'));
     }
 
     /**
@@ -94,6 +96,7 @@ class PostController extends Controller
             'title' => $request->input('title'),
             'slug' => $request->input('slug'),
             'category_id' => $request->input('category_id'),
+            'tag_id' => $request->input('tag_id'),  
             'excerpt' => $request->input('excerpt'),
             'content' => $request->input('content'),
             'image_path' => $newImage,
@@ -117,6 +120,18 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+       $post->delete();
+        // Si la imagen existe, eliminarla
+        if ($post->image_path && Storage::disk('public')->exists($post->image_path)) {
+            Storage::disk('public')->delete($post->image_path);
+        }
+
+        session()->flash('swal', [
+            'title' => 'Bien hecho!',
+            'text' => 'Post eliminado correctamente!',
+            'icon' => 'success'
+        ]);
+
+        return redirect()->route('admin.post.index');
     }
 }

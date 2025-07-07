@@ -8,6 +8,15 @@ $grupos = [
 ],
 
 [
+'name' => 'Posts',
+'iconos' => 'newspaper',
+'url'=> route('admin.post.index'),
+'current' => request()->routeIs('admin.post.*')
+
+
+],
+
+[
 'name' => 'categories',
 'iconos' => 'funnel',
 'url'=> route('admin.categories.index'),
@@ -16,11 +25,12 @@ $grupos = [
 
 ],
 
+
 [
-'name' => 'Posts',
-'iconos' => 'newspaper',
-'url'=> route('admin.post.index'),
-'current' => request()->routeIs('admin.post.*')
+'name' => 'tags',
+'iconos' => 'tag',
+'url'=> route('admin.tag.index'),
+'current' => request()->routeIs('admin.tag.*')
 
 
 ],

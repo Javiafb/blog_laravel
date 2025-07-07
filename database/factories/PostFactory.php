@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Category;
+use App\Models\tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -24,6 +25,7 @@ class PostFactory extends Factory
             'content' => $this->faker->text(2000),
             'user_id' => 1,
             'category_id' => Category::all()->random()->id,
+            'tag_id' => tag::all()->random()->id,
             'is_published' => true,
             'published_at' => now(),
         ];

@@ -13,7 +13,8 @@ class tagcontroller extends Controller
      */
     public function index()
     {
-        //
+        $tag = tag::all();
+        return view('admin.tag.index', compact('tag'));
     }
 
     /**
@@ -21,7 +22,7 @@ class tagcontroller extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.tag.create');
     }
 
     /**
@@ -29,7 +30,15 @@ class tagcontroller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        tag::create($request->all());
+
+        session()->flash('swal', [
+            'title' => 'Bien hecho!',
+            'text' => 'etiqueta creada correctamente!',
+            'icon' => 'success'
+        ]);
+
+        return redirect()->route('admin.tag.index');
     }
 
     /**
@@ -45,7 +54,7 @@ class tagcontroller extends Controller
      */
     public function edit(tag $tag)
     {
-        //
+       return view('admin.tag.edit',compact('tag'));
     }
 
     /**
@@ -53,7 +62,22 @@ class tagcontroller extends Controller
      */
     public function update(Request $request, tag $tag)
     {
-        //
+       
+        $tag->update([
+
+            'name' => $request->input('name'),
+
+        ]);
+
+          session()->flash('swal', [
+            'title' => 'Bien hecho!',
+            'text' => 'tag actualizada correctamente!',
+            'icon' => 'success'
+        ]);
+
+        return redirect()->route('admin.tag.edit',$tag);
+
+
     }
 
     /**
@@ -61,6 +85,14 @@ class tagcontroller extends Controller
      */
     public function destroy(tag $tag)
     {
-        //
+       $tag->delete();
+
+        session()->flash('swal', [
+            'title' => 'Bien hecho!',
+            'text' => 'tag eliminada correctamente!',
+            'icon' => 'success'
+        ]);
+
+        return redirect()->route('admin.tag.index');
     }
 }
