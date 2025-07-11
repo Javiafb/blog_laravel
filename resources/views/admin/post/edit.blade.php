@@ -8,14 +8,13 @@
         </flux:breadcrumbs>
     </div>
 
-
-    <form action="{{ route('admin.post.update',$post) }}" method="POST" enctype="multipart/form-data" class="cardt">
+    <form id="postForm" action="{{ route('admin.post.update',$post) }}" method="POST" enctype="multipart/form-data" class="cardt">
         @csrf
         @method('PUT')
 
         <div class="mb-5 relative">
             <img id="imgPreview" class="w-full aspect-video object-cover object-center" src="{{ $post->image_path ? Storage::url($post->image_path) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFuLZe9UHs6cC_sIBZ8HIqkTg4ADomTdWBcQ&s' }} " alt="">
-            <div class="absolute top-0 left-0 right-0 bottom-0 text-white flex items-center justify-center">
+            <div class="absolute  right-0 bottom-0 text-white flex items-center justify-center">
                 <label class="bg-black cursor-pointer px-4 py-2 rounded-lg">
                     cambiar imagen
                     <input type="file" name="image" id="image" class="hidden" accept="image/*" onchange="previewImage(event, '#imgPreview')">
@@ -52,7 +51,6 @@
                 </select>
             </div>
 
-
             <div class="mb-5">
                 <flux:textarea
                     label="resumen"
@@ -62,35 +60,48 @@
                 </flux:textarea>
             </div>
 
+
+            <!-- Editor visual -->
             <div class="mb-5">
-                <flux:textarea
-                    label="contenido"
-                    name="content"
-                    rows="16"
-                    required
-                    placeholder="{{ $post->content }}">
-                    {{ old('content', $post->content) }}
-                </flux:textarea>
+                <label for="editor">Contenido</label>
+                <div id="editor" class="p-2 border rounded" style="height: 200px;"></div>
+                <input type="hidden" name="content" id="content">
             </div>
 
             <div class="mb-5">
                 <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Estados del post</label>
-
                 <div class="flex space-x-1">
-                    <input type="radio" name="is_publiced" value="0" id="" @checked(old('is_published' , $post->is_published) == 0) >
+                    <input type="radio" name="is_published" value="0" id="" @checked(old('is_published' , $post->is_published) == 0) >
                     <span class="ml-1">No publicado</span>
-
-                    <input type="radio" name="is_publiced" value="1" id="" @checked(old('is_published' , $post->is_published) == 1)>
+                    <input type="radio" name="is_published" value="1" id="" @checked(old('is_published' , $post->is_published) == 1)>
                     <span class="ml-1">Publicado</span>
                 </div>
-
             </div>
 
             <div class="flex justify-end">
                 <button type="submit" class="boton">Enviar</button>
             </div>
-
         </div>
     </form>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            
+            // Inicializar Quill
+            const quill = new Quill("#editor", {
+                theme: "snow"
+            });
+
+            quill.root.innerHTML = `{!! old('content', $post->content) !!}`;
+
+            const form = document.getElementById("postForm");
+            form.addEventListener("submit", function(e) {
+                const htmlContent = quill.root.innerHTML;
+                document.getElementById("content").value = htmlContent;
+                console.log("Contenido copiado:", htmlContent); 
+            });
+        });
+    </script>
 
 </x-layouts.app>

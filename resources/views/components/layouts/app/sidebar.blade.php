@@ -1,44 +1,4 @@
-@php
-$grupos = [
-'platform'=>[
-'name' => 'dashboard',
-'iconos' => 'home',
-'url' => route('dashboard'),
-'current' => request()->routeIs('dashboard')
-],
 
-[
-'name' => 'Posts',
-'iconos' => 'newspaper',
-'url'=> route('admin.post.index'),
-'current' => request()->routeIs('admin.post.*')
-
-
-],
-
-[
-'name' => 'categories',
-'iconos' => 'funnel',
-'url'=> route('admin.categories.index'),
-'current' => request()->routeIs('categories.*')
-
-
-],
-
-
-[
-'name' => 'tags',
-'iconos' => 'tag',
-'url'=> route('admin.tag.index'),
-'current' => request()->routeIs('admin.tag.*')
-
-
-],
-
-];
-
-
-@endphp
 
 
 <!DOCTYPE html>

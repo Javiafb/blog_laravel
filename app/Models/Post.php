@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,6 +29,16 @@ class Post extends Model
         'published_at' => 'datetime',
     ];
 
+    protected function imagen(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->image_path ? asset('storage/' . $this->image_path) : asset('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFuLZe9UHs6cC_sIBZ8HIqkTg4ADomTdWBcQ&s'),
+        );
+    }
 
+     public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
 }

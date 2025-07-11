@@ -69,7 +69,7 @@ class PostController extends Controller
     {
         $categories = Category::all();
         $tag = tag::all();
-        return view('admin.post.edit', compact('post', 'categories' , 'tag'));
+        return view('admin.post.edit', compact('post', 'categories', 'tag'));
     }
 
     /**
@@ -92,18 +92,32 @@ class PostController extends Controller
             ? $request->file('image')->store('posts', 'public')
             : $post->image_path;
 
+
+        // Detectamos si se activó por primera vez
+        $wasUnpublished = !$post->is_published;
+        $willBePublished = $request->input('is_published');
+
         $post->update([
             'title' => $request->input('title'),
             'slug' => $request->input('slug'),
             'category_id' => $request->input('category_id'),
-            'tag_id' => $request->input('tag_id'),  
+            'tag_id' => $request->input('tag_id'),
             'excerpt' => $request->input('excerpt'),
             'content' => $request->input('content'),
             'image_path' => $newImage,
-            'is_published' => $request->input('is_publiced') == 1 ? true : false,
+            'is_published' => $willBePublished,
         ]);
 
-        if ($request->file('image') && $oldImage && Storage::disk('public')->exists($oldImage)) {Storage::disk('public')->delete($oldImage);
+
+        // Solo si se publica por primera vez, añadimos la fecha
+        if ($wasUnpublished && $willBePublished) {
+            $post['published_at'] = now();
+        }
+
+        $post->save();
+
+        if ($request->file('image') && $oldImage && Storage::disk('public')->exists($oldImage)) {
+            Storage::disk('public')->delete($oldImage);
         }
 
         session()->flash('swal', [
@@ -120,7 +134,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-       $post->delete();
+        $post->delete();
         // Si la imagen existe, eliminarla
         if ($post->image_path && Storage::disk('public')->exists($post->image_path)) {
             Storage::disk('public')->delete($post->image_path);

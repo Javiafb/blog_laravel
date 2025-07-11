@@ -1,26 +1,12 @@
 @php
-$grupos = [
-'platform'=>[
-'name' => 'dashboard',
-'url' => route('dashboard'),
-'current' => request()->routeIs('dashboard')
-],
 
+$links = [
 [
-'name' => 'categories',
-'url'=> route('admin.categories.index'),
-'current' => request()->routeIs('categories.*')
 
-
-],
-
-[
-'name' => 'post',
-'url'=> route('admin.post.index'),
-'iconos' => 'newspaper',
-'current' => request()->routeIs('categories.*')
-
-
+'name' => 'Dashboard',
+'iconos' => 'layout-grid',
+'url'=> route('posts.index'),
+'current' => request()->routeIs('posts.*')
 ],
 
 ];
@@ -32,7 +18,36 @@ $grupos = [
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
 <head>
-  
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
+
+    <!-- sweetalert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- DataTable CSS + JS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- Quill CSS + JS -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @fluxAppearance
+
+    <title>{{ $title ?? 'principal' }}</title>
 
 </head>
 
@@ -45,40 +60,27 @@ $grupos = [
         </a>
 
         <flux:navbar class="-mb-px max-lg:hidden">
-            @foreach ($grupos as $grup => $link)
-            <flux:navbar.item :href="$link['url']" :current="$link['current']" wire:navigate>{{$link['name']}}
 
+
+            @foreach ($links as $link)
+            <flux:navbar.item
+                :icon="$link['iconos']"
+                :href="$link['url']"
+                :current="$link['current']"
+                wire:navigate>
+                {{ $link['name'] }}
             </flux:navbar.item>
-
             @endforeach
-
         </flux:navbar>
 
         <flux:spacer />
 
-        <flux:navbar class="me-1.5 space-x-0.5 rtl:space-x-reverse py-0!">
-            <flux:tooltip :content="__('Search')" position="bottom">
-                <flux:navbar.item class="!h-10 [&>div>svg]:size-5" icon="magnifying-glass" href="#" :label="__('Search')" />
-            </flux:tooltip>
-            <flux:tooltip :content="__('Repository')" position="bottom">
-                <flux:navbar.item
-                    class="h-10 max-lg:hidden [&>div>svg]:size-5"
-                    icon="folder-git-2"
-                    href="https://github.com/laravel/livewire-starter-kit"
-                    target="_blank"
-                    :label="__('Repository')" />
-            </flux:tooltip>
-            <flux:tooltip :content="__('Documentation')" position="bottom">
-                <flux:navbar.item
-                    class="h-10 max-lg:hidden [&>div>svg]:size-5"
-                    icon="book-open-text"
-                    href="https://laravel.com/docs/starter-kits#livewire"
-                    target="_blank"
-                    label="Documentation" />
-            </flux:tooltip>
-        </flux:navbar>
 
         <!-- Desktop User Menu -->
+
+
+        @auth
+
         <flux:dropdown position="top" align="end">
             <flux:profile
                 class="cursor-pointer"
@@ -119,6 +121,26 @@ $grupos = [
                 </form>
             </flux:menu>
         </flux:dropdown>
+
+
+
+        @else
+        <flux:dropdown position="top" align="end">
+            <flux:profile class="cursor-pointer" icon="user" />
+
+            <flux:menu>
+                <flux:menu.item :href="route('login')" icon="arrow-right-start-on-rectangle" wire:navigate>
+                    {{ __('Log In') }}
+                </flux:menu.item>
+
+                <flux:menu.item :href="route('register')" icon="user-plus" wire:navigate>
+                    {{ __('Register') }}
+                </flux:menu.item>
+            </flux:menu>
+        </flux:dropdown>
+
+
+        @endauth
     </flux:header>
 
     <!-- Mobile Menu -->
@@ -150,7 +172,23 @@ $grupos = [
         </flux:navlist>
     </flux:sidebar>
 
-    {{ $slot }}
+    <flux:main>
+        {{ $slot }}
+    </flux:main>
+
+    @fluxScripts
+
+
+
+    @stack('js')
+
+
+    @if(session('swal'))
+
+    <script>
+        Swal.fire(@json(session('swal')));
+    </script>
+    @endif
 
     @fluxScripts
 </body>
